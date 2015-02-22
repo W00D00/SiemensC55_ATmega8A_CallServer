@@ -179,9 +179,9 @@ void button_int0_handler(void)
 		{
 			/* reset the flag */
 			BUTTON_INT0 = 0;
+			/* switch ON or OFF the outputs */
+			toggle_outputs();
 		}
-		/* switch ON or OFF the outputs */
-		toggle_outputs();
 	}
 }
 
@@ -214,10 +214,10 @@ uint16_t uart_get_char(void)
 		return UART_NO_DATA;
 	}
 
-	/* calculate/store buffer index */
-	tmpTail = (UART_RxTail + 1) & UART_RX_BUFFER_MASK;
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
+		/* calculate/store buffer index */
+		tmpTail = (UART_RxTail + 1) & UART_RX_BUFFER_MASK;
 		UART_RxTail = tmpTail;
 		/* get data from receive buffer */
 		data = UART_RxBuf[UART_RxTail];
@@ -238,10 +238,10 @@ uint16_t uart_peek(void)
 		return UART_NO_DATA;
 	}
 
-	/* calculate/store buffer index */
-	tmp_tail = (UART_RxTail + 1) & UART_RX_BUFFER_MASK;
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
+		/* calculate/store buffer index */
+		tmp_tail = (UART_RxTail + 1) & UART_RX_BUFFER_MASK;
 		/* get data from receive buffer */
 		data = UART_RxBuf[tmp_tail];
 	}
@@ -341,7 +341,6 @@ uint8_t uart_is_data_in_rx_buffer(const char *data)
 	uint8_t res;
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
-		/* if (uart_data_available() && strstr((const char *)UART_RxBuf+UART_RxTail, data)) */
 		if (UART_RxReady && strstr((const char *)UART_RxBuf+UART_RxTail, data))
 		{
 			res = 1;

@@ -68,7 +68,7 @@ void gsm_put_at_command(const char *at_command, const char *terminate, const cha
 		*/
 		uint8_t time_out_circles = 10;				// x10
 		uint8_t time_out_one_circle_time = 100;		// 100ms
-		// time out is given by caller
+		/* time out is given by caller */
 		if (time_out_ms > 0)
 		{
 			time_out_circles = time_out_ms/time_out_one_circle_time;
@@ -79,6 +79,7 @@ void gsm_put_at_command(const char *at_command, const char *terminate, const cha
 			uint8_t response_received = 0;
 			while (time_out_circles)
 			{
+				/*  */
 				if (uart_is_data_in_rx_buffer(at_response[i]))
 				{
 					ok_led_blinking(1);
@@ -102,7 +103,6 @@ void gsm_put_at_command(const char *at_command, const char *terminate, const cha
 			error_led_blinking(1);
 			gsm_put_at_command(at_command, terminate, at_response, response_size, time_out_ms);
 		}
-		uart_reset_rx_buffer();
 	}
 }
 
@@ -160,4 +160,5 @@ void gsm_event_handler(void)
 			gsm_put_at_command(AT_COMMAND_HANGUP, CR_LF_TERMINATOR, AT_RESPONSE_HANGUP, 1, 0);
 		}
 	}
+	/*  */
 }
